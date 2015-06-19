@@ -842,6 +842,7 @@ if __name__ == '__main__':
     parser.add_option("--dialect",  default="ardupilotmega", help="MAVLink dialect")
     parser.add_option("--rtscts",  action='store_true', help="enable hardware RTS/CTS flow control")
     parser.add_option("--mission", dest="mission", help="mission name", default=None)
+    parser.add_option("--proxy-only", dest="proxy_only", help="proxy only, don't load default modules", action='store_true', default=False)
     parser.add_option("--daemon", action='store_true', help="run in daemon mode, do not start interactive shell")
     parser.add_option("--profile", action='store_true', help="run the Yappi python profiler")
 
@@ -940,7 +941,10 @@ if __name__ == '__main__':
 
     if not opts.setup:
         # some core functionality is in modules
-        standard_modules = ['log', 'wp', 'rally','fence','param','relay',
+        if opts.proxy_only:
+            standard_modules = ['log', 'relay', 'misc', 'output']
+        else:
+            standard_modules = ['log', 'wp', 'rally','fence','param','relay',
                             'tuneopt','arm','mode','calibration','rc','auxopt','misc','cmdlong',
                             'battery','terrain','output']
         for m in standard_modules:
